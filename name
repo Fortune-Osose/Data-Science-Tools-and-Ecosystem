@@ -1,0 +1,34 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Constants
+R = 8.314  # J/(mol K)
+k1_25 = 0.015  # min^-1 at 25°C
+k1_65 = 0.869  # min^-1 at 65°C
+T1 = 25 + 273.15  # K
+T2 = 65 + 273.15  # K
+
+# Activation energy calculation
+Ea = R * (T1 * T2) / (T2 - T1) * np.log(k1_65 / k1_25)
+
+# Temperature range for the plot
+T = np.linspace(273.15, 373.15, 100)  # from 0°C to 100°C in Kelvin
+
+# Arrhenius equation to calculate k(T)
+k = k1_25 * np.exp(-Ea/R * (1/T - 1/T1))
+
+# Conversion calculations for different times
+times = [1, 10, 30, 60]  # in minutes
+conversions = {time: 1 - np.exp(-k * time) for time in times}
+
+# Plotting
+plt.figure(figsize=(10, 6))
+for time in times:
+    plt.plot(T - 273.15, conversions[time], label=f't = {time} min')
+
+plt.xlabel('Temperature (°C)')
+plt.ylabel('Conversion')
+plt.title('Conversion vs Temperature for Different Reaction Times')
+plt.legend()
+plt.grid(True)
+plt.show()
